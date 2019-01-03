@@ -1,0 +1,38 @@
+//README about Enviroments
+//REGION - Specify AWS region for parsing, otherwise SDK use all possible EC2 regions
+//TAG_NAME and TAG_VALUE - are EC2 custom to specify (mandatory)
+//RANDOM - allows jump beetween instances if more than one (totaly optional)
+
+const AWS = require('aws-sdk');  
+AWS.config.region = process.env.REGION;
+const ec2 = new AWS.EC2();
+
+exports.handler = function(event, context) {  
+    
+var params = {
+  Filters: [
+     {
+    Name: "tag:"+process.env.TAG_NAME, 
+    Values: [process.env.TAG_VALUE]
+   }
+  ]
+ };
+ 
+ ec2.describeInstances(params, function(err, data) {
+   if (err) console.log(err, err.stack); 
+   else 
+        var HostLocalDNSname;
+        
+        if (process.env.RANDOM > 0){
+            let instanceN = Math.floor(Math.random() * data.Reservations.length);
+            console.log("Number of instances: " + data.Reservations.length);
+            HostLocalDNSname =  data.Reservations[instanceN].Instances[0].PrivateDnsName;           
+        } else
+            HostLocalDNSname =  data.Reservations[0].Instances[0].PrivateDnsName;
+        
+        //Do something with discovered host here
+        console.log(HostLocalDNSname);
+        
+ });
+    
+};
