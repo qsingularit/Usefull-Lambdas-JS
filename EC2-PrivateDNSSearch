@@ -1,4 +1,4 @@
-//README about Enviroments
+//README about Environment variables:
 //REGION - Specify AWS region for parsing, otherwise SDK use all possible EC2 regions
 //TAG_NAME and TAG_VALUE - are EC2 custom to specify (mandatory)
 //RANDOM - allows jump beetween instances if more than one (totaly optional)
